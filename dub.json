@@ -1,0 +1,12 @@
+{
+    "authors": [
+        "klknn"
+    ],
+    "copyright": "Copyright © 2023, klknn",
+    "description": "QBE backend for D",
+    "dependencies": {
+        "libdparse": "~>0.21.1"
+    },
+    "license": "BSL-1.0",
+    "name": "qdc-backend"
+}

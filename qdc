@@ -1,0 +1,45 @@
+#!/bin/bash
+
+set -euo pipefail
+
+DIR=`cd $(dirname $0); pwd`
+QBE=$DIR/qbe/qbe
+
+usage()
+{
+    echo "usage: qdc [LDFLAGS] file.d" >&2
+    exit 1
+}
+
+file=""
+flags="-no-pie"
+for i; do
+    case $i in
+        -*)
+            flags="$flags $i"
+            ;;
+        *)
+            if ! test -z $file
+            then
+                usage
+            fi
+            file=$i
+            ;;
+    esac
+done
+
+if test -z $file
+then
+    usage
+fi
+
+
+dub run -q -- $file > /tmp/qdc.ssa &&
+    $QBE < /tmp/qdc.ssa > /tmp/qdc.s   &&
+    cc /tmp/qdc.s $flags
+
+if test $? -ne 0
+then
+    echo "error processing file $file" >&2
+    exit 1
+fi
